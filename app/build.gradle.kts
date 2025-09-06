@@ -37,7 +37,7 @@ android {
         targetSdk = 36
         versionCode = appVersionCode
         versionName = appVersionName
-        setProperty("archivesBaseName", "${project.name}-${versionName}")
+        setProperty("archivesBaseName", "NasTool-${versionName}")
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

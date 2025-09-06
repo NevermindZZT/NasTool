@@ -45,6 +45,7 @@ class SmbSyncTaskAddViewModel(application: Application): AndroidViewModel(applic
                 password.postValue(it.password)
                 remotePath.postValue(it.remotePath)
                 localPath.postValue(it.localPath)
+                fileType.postValue(it.fileType)
                 includeSubDirs.postValue(it.includeSubDirs)
             }
         }
