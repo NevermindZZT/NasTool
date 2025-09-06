@@ -43,6 +43,8 @@
     <string name="fragment_smb_sync_download_infos_state_failed">Failed</string>
     <string name="fragment_smb_sync_download_infos_state_unknown">Unknown</string>
     <string name="fragment_smb_sync_download_no_task">No Task</string>
+    <string name="fragment_smb_sync_download_dialog_failed_info_title">Download Failed</string>
+    <string name="fragment_smb_sync_download_dialog_failed_info_positive_button">OK</string>
 
     <string name="setting_category_others">others</string>
     <string name="setting_clear_file_sync_infos_title">Clear File Sync Infos</string>

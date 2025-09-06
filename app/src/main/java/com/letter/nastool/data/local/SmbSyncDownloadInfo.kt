@@ -11,7 +11,8 @@ data class SmbSyncDownloadInfo(
     val destPath: String,
     var isDownloaded: Boolean = false,
     var state: Int = STATE_PENDING,
-    var onInfoChanged: (() -> Unit)? = null
+    var onInfoChanged: (() -> Unit)? = null,
+    var info: String? = null
 ) {
     companion object {
         const val STATE_PENDING = 0

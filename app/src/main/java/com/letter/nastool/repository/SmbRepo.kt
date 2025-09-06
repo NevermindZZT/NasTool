@@ -1,6 +1,7 @@
 package com.letter.nastool.repository
 
 import android.util.Log
+import com.letter.nastool.utils.ext.joinPath
 import jcifs.CIFSContext
 import jcifs.smb.SmbFile
 import java.io.File
@@ -49,7 +50,11 @@ class SmbRepo(val serverIp: String, val username: String, val password: String) 
 
     fun listFiles(path: String): Array<SmbFile> {
         try {
-            val smbFile = SmbFile(getUrl(path), baseContext)
+            var smbFile = SmbFile(getUrl(path), baseContext)
+            if (smbFile.isDirectory && !path.endsWith(File.separator)) {
+                smbFile.close()
+                smbFile  = SmbFile(smbFile.path + File.separator, baseContext)
+            }
             val files = smbFile.listFiles()
             return files
         } catch (e: Exception) {
@@ -59,29 +64,20 @@ class SmbRepo(val serverIp: String, val username: String, val password: String) 
     }
 
     fun download(smbFile: SmbFile, localPath: String): String? {
-        try {
-            smbFile.getInputStream().use { input ->
-                val dest = if (File(localPath).isDirectory) {
-                    if (localPath.endsWith(File.separator)) {
-                        localPath + smbFile.name
-                    } else {
-                        "$localPath${File.separator}${smbFile.name}"
-                    }
-                } else {
-                    localPath
-                }
-                val parentFile = File(dest).parentFile
-                if (parentFile != null && !parentFile.exists()) {
-                    parentFile.mkdirs()
-                }
-                FileOutputStream(dest).use { output ->
-                    input.copyTo(output, bufferSize = 64 * 1024)
-                }
-                return dest
+        smbFile.getInputStream().use { input ->
+            val dest = if (File(localPath).isDirectory) {
+                localPath.joinPath(smbFile.name)
+            } else {
+                localPath
             }
-        } catch (e: Exception) {
-            Log.e(TAG, "", e)
+            val parentFile = File(dest).parentFile
+            if (parentFile != null && !parentFile.exists()) {
+                parentFile.mkdirs()
+            }
+            FileOutputStream(dest).use { output ->
+                input.copyTo(output, bufferSize = 64 * 1024)
+            }
+            return dest
         }
-        return null
     }
 }

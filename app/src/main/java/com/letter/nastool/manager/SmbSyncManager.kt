@@ -13,6 +13,7 @@ import com.letter.nastool.database.entity.SmbSyncFileInfoEntity
 import com.letter.nastool.database.entity.SmbSyncTaskEntity
 import com.letter.nastool.repository.SmbRepo
 import com.letter.nastool.services.SmbSyncService
+import com.letter.nastool.utils.ext.joinPath
 import java.io.File
 import java.io.FileDescriptor
 import java.io.PrintWriter
@@ -120,11 +121,17 @@ class SmbSyncManager private constructor(context: Context) {
     private fun addDownloadInfo(task: SmbSyncTaskEntity, smbRepo:  SmbRepo, srcPath: String,  destPath: String): Int {
         var added = 0
 
+        Log.i(TAG, "addDownloadInfo: list files: $srcPath")
         val smbFiles = smbRepo.listFiles(srcPath)
         smbFiles.forEach {
             if (it.isDirectory) {
                 if (task.includeSubDirs) {
-                    added += addDownloadInfo(task, smbRepo, it.path, "$destPath${File.separator}${it.name}")
+                    added += addDownloadInfo(
+                        task,
+                        smbRepo,
+                        it.path,
+                        destPath.joinPath(it.name)
+                    )
                 }
             } else {
                 val syncFileInfo = getSyncFileInfo(task.id, it.path)
@@ -137,7 +144,7 @@ class SmbSyncManager private constructor(context: Context) {
                     return@forEach
                 }
 
-                val dest = "$destPath${File.separator}${it.name}"
+                val dest = destPath.joinPath(it.name)
                 downloadInfos.value!!.add(
                     SmbSyncDownloadInfo(task, smbRepo, it, dest)
                 )
@@ -181,7 +188,13 @@ class SmbSyncManager private constructor(context: Context) {
                 try {
                     it.state = SmbSyncDownloadInfo.STATE_IN_PROGRESS
                     it.onInfoChanged?.invoke()
-                    val dest = it.repo.download(it.srcFile, it.destPath)
+                    val dest = try {
+                        it.repo.download(it.srcFile, it.destPath)
+                    } catch (e: Exception) {
+                        Log.e(TAG, "", e)
+                        it.info = e.stackTraceToString()
+                        null
+                    }
                     if (dest == null) {
                         it.state = SmbSyncDownloadInfo.STATE_FAILED
                         it.onInfoChanged?.invoke()

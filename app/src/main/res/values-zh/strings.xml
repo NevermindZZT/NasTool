@@ -38,6 +38,8 @@
     <string name="fragment_smb_sync_download_infos_state_failed">失败</string>
     <string name="fragment_smb_sync_download_infos_state_unknown">未知</string>
     <string name="fragment_smb_sync_download_no_task">无任务</string>
+    <string name="fragment_smb_sync_download_dialog_failed_info_title">下载失败</string>
+    <string name="fragment_smb_sync_download_dialog_failed_info_positive_button">确认</string>
     <string name="setting_category_others">其他</string>
     <string name="setting_clear_file_sync_infos_title">清除文件同步信息</string>
     <string name="setting_clear_file_sync_infos_summary">所有文件同步新都会被清除，文件可能会被再一次下载</string>
