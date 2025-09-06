@@ -1,9 +1,16 @@
 <resources>
     <string name="app_name">NasTool</string>
 
+    <string name="notification_channel_smb_sync_name">Smb Sync</string>
+    <string name="notification_channel_smb_sync_description">Smb Sync Notifications</string>
+
+    <string name="notification_smb_sync_running_title">Syncing</string>
+    <string name="notification_smb_sync_running_message">Smb Sync is Running</string>
+
     <string name="activity_main_nav_home">Home</string>
     <string name="activity_main_nav_tasks">Tasks</string>
     <string name="activity_main_nav_settings">Settings</string>
+    <string name="activity_main_permission_request_failed">Permission request failed</string>
 
     <string name="activity_smb_sync_task_add_title">Add Smb Sync Task</string>
     <string name="activity_smb_sync_task_task_name_hint">Task Name</string>

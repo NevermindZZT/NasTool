@@ -12,6 +12,7 @@ import com.letter.nastool.database.AppDatabase
 import com.letter.nastool.database.entity.SmbSyncFileInfoEntity
 import com.letter.nastool.database.entity.SmbSyncTaskEntity
 import com.letter.nastool.repository.SmbRepo
+import com.letter.nastool.services.SmbSyncService
 import java.io.File
 import java.io.FileDescriptor
 import java.io.PrintWriter
@@ -172,6 +173,7 @@ class SmbSyncManager private constructor(context: Context) {
     private fun syncProcess() {
         while (!Thread.interrupted()) {
             threadCondition.block()
+            SmbSyncService.start(contextWeakReference.get()!!, SmbSyncService.START_TYPE_START_SYNC)
             for (it in downloadInfos.value!!.iterator()) {
                 if (it.isDownloaded) {
                     continue
@@ -215,6 +217,7 @@ class SmbSyncManager private constructor(context: Context) {
                     break
                 }
             }
+            SmbSyncService.start(contextWeakReference.get()!!, SmbSyncService.START_TYPE_STOP_SYNC)
             threadCondition.close()
         }
         Log.e(TAG, "syncProcess: thread interrupted")
