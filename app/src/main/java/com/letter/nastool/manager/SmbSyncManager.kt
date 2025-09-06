@@ -1,8 +1,10 @@
 package com.letter.nastool.manager
 
 import android.content.Context
+import android.media.MediaScannerConnection
 import android.os.ConditionVariable
 import android.util.Log
+import android.webkit.MimeTypeMap
 import androidx.databinding.ObservableArrayList
 import androidx.databinding.ObservableList
 import androidx.lifecycle.MutableLiveData
@@ -14,7 +16,6 @@ import com.letter.nastool.database.entity.SmbSyncTaskEntity
 import com.letter.nastool.repository.SmbRepo
 import com.letter.nastool.services.SmbSyncService
 import com.letter.nastool.utils.ext.joinPath
-import java.io.File
 import java.io.FileDescriptor
 import java.io.PrintWriter
 import java.lang.ref.WeakReference
@@ -221,6 +222,18 @@ class SmbSyncManager private constructor(context: Context) {
                             )
                             Log.i(TAG, "syncProcess: insert sync file info: ${it.srcFile.path}")
                         }
+                        MediaScannerConnection.scanFile(
+                            contextWeakReference.get()!!,
+                            arrayOf(dest),
+                            arrayOf(
+                                MimeTypeMap.getSingleton()
+                                    .getMimeTypeFromExtension(
+                                        dest.substringAfterLast('.', "")
+                                    )
+                                    ?.lowercase()
+                            ),
+                            null
+                        )
                     }
                 } catch (e: Exception) {
                     Log.e(TAG, "syncProcess: download exception: ${it.srcFile.path} to ${it.destPath}", e)
