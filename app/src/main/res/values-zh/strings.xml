@@ -18,6 +18,7 @@
     <string name="activity_smb_sync_task_local_path_hint">本地路径</string>
     <string name="activity_smb_sync_task_file_type_hint">文件类型</string>
     <string name="activity_smb_sync_task_include_subdirs">包含子目录</string>
+    <string name="activity_smb_sync_task_choose_button">选择</string>
     <string name="activity_smb_sync_task_save_button">"保存 "</string>
     <string name="activity_smb_sync_task_add_toolbar_menu_delete">删除</string>
     <string name="activity_smb_sync_task_add_dialog_delete_title">删除</string>
@@ -28,6 +29,8 @@
     <string name="activity_smb_sync_task_add_toast_delete_no_such_task">任务未保存</string>
     <string name="activity_smb_sync_task_add_toast_check_failed">连接 Smb  服务器失败，请检查您的地址，用户名，密码和路径</string>
     <string name="activity_smb_sync_task_add_dialog_checking">连接检查中，请稍候...</string>
+    <string name="activity_smb_sync_task_add_dialog_choose_remote_title">选择远程文件和目录</string>
+    <string name="activity_smb_sync_task_add_dialog_choose_local_title">选择本地文件和目录</string>
     <string name="fragment_smb_sync_tasks_start_success">启动同步任务成功，添加了 %d  条下载任务</string>
     <string name="fragment_smb_sync_tasks_start_no_new_task">启动同步任务成功，但是没有需要添加的下载任务</string>
     <string name="fragment_smb_sync_tasks_task_info_total">总共: %s</string>
@@ -48,4 +51,7 @@
     <string name="fragment_settings_dialog_clear_file_sync_infos_positive_button">清除</string>
     <string name="fragment_settings_dialog_clear_file_sync_infos_negative_button">取消</string>
     <string name="fragment_settings_dialog_clear_file_sync_infos_completed">所有的文件同步信息都已清除</string>
+    <string name="dialog_file_choose_title">选择文件</string>
+    <string name="dialog_file_choose_current_directory">选择当前目录</string>
+    <string name="dialog_file_choose_back_to_parent">回到上一级</string>
 </resources>

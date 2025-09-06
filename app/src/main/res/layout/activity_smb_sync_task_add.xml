@@ -123,35 +123,69 @@
                             android:text="@={model.password}" />
                     </com.google.android.material.textfield.TextInputLayout>
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/remotePathLayout"
+                    <LinearLayout
+                        android:orientation="horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="16dp"
-                        android:layout_marginEnd="16dp">
+                        android:layout_marginEnd="16dp" >
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:layout_width="match_parent"
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/remotePathLayout"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:hint="@string/activity_smb_sync_task_remote_path_hint"
-                            android:text="@={model.remotePath}" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                            android:layout_weight="1">
 
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/localPathLayout"
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/activity_smb_sync_task_remote_path_hint"
+                                android:text="@={model.remotePath}" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <Button
+                            android:id="@+id/chooseRemoteButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="8dp"
+                            android:onClick="@{onClick}"
+                            android:text="@string/activity_smb_sync_task_choose_button" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:orientation="horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="16dp"
-                        android:layout_marginEnd="16dp">
+                        android:layout_marginEnd="16dp" >
 
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:layout_width="match_parent"
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:id="@+id/localPathLayout"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:hint="@string/activity_smb_sync_task_local_path_hint"
-                            android:text="@={model.localPath}" />
-                    </com.google.android.material.textfield.TextInputLayout>
+                            android:layout_weight="1">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/activity_smb_sync_task_local_path_hint"
+                                android:text="@={model.localPath}" />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <Button
+                            android:id="@+id/chooseLocalButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="8dp"
+                            android:onClick="@{onClick}"
+                            android:text="@string/activity_smb_sync_task_choose_button" />
+
+                    </LinearLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/fileTypeLayout"

@@ -21,6 +21,7 @@
     <string name="activity_smb_sync_task_local_path_hint">Local Path</string>
     <string name="activity_smb_sync_task_file_type_hint">File Type</string>
     <string name="activity_smb_sync_task_include_subdirs">Include Subdirs</string>
+    <string name="activity_smb_sync_task_choose_button">Choose</string>
     <string name="activity_smb_sync_task_save_button">Save</string>
     <string name="activity_smb_sync_task_add_toolbar_menu_delete">Delete</string>
     <string name="activity_smb_sync_task_add_dialog_delete_title">Delete</string>
@@ -31,6 +32,8 @@
     <string name="activity_smb_sync_task_add_toast_delete_no_such_task">Task not saved</string>
     <string name="activity_smb_sync_task_add_toast_check_failed">Connect to smb server failed, please check you address, username, password and path</string>
     <string name="activity_smb_sync_task_add_dialog_checking">Check connection, Please wait…</string>
+    <string name="activity_smb_sync_task_add_dialog_choose_remote_title">Choose Remote File(Directory)</string>
+    <string name="activity_smb_sync_task_add_dialog_choose_local_title">Choose Local File(Directory)</string>
 
     <string name="fragment_smb_sync_tasks_start_success">Start sync task success, %d download task has be added</string>
     <string name="fragment_smb_sync_tasks_start_no_new_task">Start sync task success, but no download task has be added</string>
@@ -55,5 +58,9 @@
     <string name="fragment_settings_dialog_clear_file_sync_infos_positive_button">Clear</string>
     <string name="fragment_settings_dialog_clear_file_sync_infos_negative_button">Cancel</string>
     <string name="fragment_settings_dialog_clear_file_sync_infos_completed">All file sync infos has be removed</string>
+
+    <string name="dialog_file_choose_title">Choose File</string>
+    <string name="dialog_file_choose_current_directory">Choose Current Directory</string>
+    <string name="dialog_file_choose_back_to_parent">Back to Parent Directory</string>
 
 </resources>

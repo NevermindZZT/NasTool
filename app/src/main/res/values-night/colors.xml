@@ -3,4 +3,6 @@
     <color name="appBarBackgroundColor">#201c25</color>
     <color name="appBarFrontColor">#99FFFFFF</color>
     <color name="activityBackgroundColor">#1f1b23</color>
+
+    <color name="divideLineColor">#22FFFFFF</color>
 </resources>

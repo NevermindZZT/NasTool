@@ -25,7 +25,7 @@ private fun executeCommand(command: String): String {
     }
 }
 
-private val appMainVersion = 10002
+private val appMainVersion = 10003
 private val appRevision = executeCommand("git describe --always")
 private val commitCount = executeCommand("git rev-list --count HEAD")
 private val date = executeCommand("date +'%Y%m%d'")

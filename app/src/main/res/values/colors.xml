@@ -11,4 +11,6 @@
     <color name="appBarBackgroundColor">#F2EBF7</color>
     <color name="appBarFrontColor">#99000000</color>
     <color name="activityBackgroundColor">#FEF5FF</color>
+
+    <color name="divideLineColor">#22000000</color>
 </resources>

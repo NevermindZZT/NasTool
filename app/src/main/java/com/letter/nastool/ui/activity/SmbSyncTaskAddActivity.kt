@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.letter.nastool.R
 import com.letter.nastool.databinding.ActivitySmbSyncTaskAddBinding
+import com.letter.nastool.ui.dialog.FileChooseDialogBuilder
 import com.letter.nastool.viewmodel.SmbSyncTaskAddViewModel
 
 class SmbSyncTaskAddActivity : AppCompatActivity(), View.OnClickListener, Toolbar.OnMenuItemClickListener {
@@ -76,6 +77,37 @@ class SmbSyncTaskAddActivity : AppCompatActivity(), View.OnClickListener, Toolba
                         ).show()
                     }
                 }
+            }
+            R.id.chooseRemoteButton -> {
+                FileChooseDialogBuilder(this)
+                    .setRootDir("/")
+                    .setShowProgressWhenList(true)
+                    .setOnFileList { path ->
+                        model.listSmbFiles(this, path)
+                    }
+                    .setOnFileChosen { dialog, path ->
+                        model.remotePath.value = path
+                        dialog.dismiss()
+                    }
+                    .setTitle(R.string.activity_smb_sync_task_add_dialog_choose_remote_title)
+                    .create().apply {
+                        show()
+                    }
+            }
+            R.id.chooseLocalButton ->{
+                FileChooseDialogBuilder(this)
+                    .setRootDir("/sdcard/")
+                    .setOnFileList { path ->
+                        model.listLocalFiles(path)
+                    }
+                    .setOnFileChosen { dialog, path ->
+                        model.localPath.value = path
+                        dialog.dismiss()
+                    }
+                    .setTitle(R.string.activity_smb_sync_task_add_dialog_choose_local_title)
+                    .create().apply {
+                        show()
+                    }
             }
         }
     }
