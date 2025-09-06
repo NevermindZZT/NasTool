@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="appBarBackgroundColor">#201c25</color>
+    <color name="appBarFrontColor">#99FFFFFF</color>
+    <color name="activityBackgroundColor">#1f1b23</color>
+</resources>

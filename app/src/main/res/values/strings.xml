@@ -1,0 +1,49 @@
+<resources>
+    <string name="app_name">NasTool</string>
+
+    <string name="activity_main_nav_home">Home</string>
+    <string name="activity_main_nav_tasks">Tasks</string>
+    <string name="activity_main_nav_settings">Settings</string>
+
+    <string name="activity_smb_sync_task_add_title">Add Smb Sync Task</string>
+    <string name="activity_smb_sync_task_task_name_hint">Task Name</string>
+    <string name="activity_smb_sync_task_server_address_hint">Server Address</string>
+    <string name="activity_smb_sync_task_username_hint">Username</string>
+    <string name="activity_smb_sync_task_password_hint">Password</string>
+    <string name="activity_smb_sync_task_remote_path_hint">Remote Path</string>
+    <string name="activity_smb_sync_task_local_path_hint">Local Path</string>
+    <string name="activity_smb_sync_task_file_type_hint">File Type</string>
+    <string name="activity_smb_sync_task_save_button">Save</string>
+    <string name="activity_smb_sync_task_add_toolbar_menu_delete">Delete</string>
+    <string name="activity_smb_sync_task_add_dialog_delete_title">Delete</string>
+    <string name="activity_smb_sync_task_add_dialog_delete_message">Are you sure to delete task?</string>
+    <string name="activity_smb_sync_task_add_dialog_delete_positive_button">Yes</string>
+    <string name="activity_smb_sync_task_add_dialog_delete_negative_button">No</string>
+    <string name="activity_smb_sync_task_add_toast_delete_success">Delete success</string>
+    <string name="activity_smb_sync_task_add_toast_delete_no_such_task">Task not saved</string>
+    <string name="activity_smb_sync_task_add_toast_check_failed">Connect to smb server failed, please check you address, username, password and path</string>
+    <string name="activity_smb_sync_task_add_dialog_checking">Check connection, Please wait…</string>
+
+    <string name="fragment_smb_sync_tasks_start_success">Start sync task success, %d task has be added</string>
+    <string name="fragment_smb_sync_tasks_start_no_new_task">Start sync task success, but no task has be added</string>
+    <string name="fragment_smb_sync_tasks_task_info_total">Total: %s</string>
+    <string name="fragment_smb_sync_tasks_task_info_synced">Synced: %s</string>
+
+    <string name="fragment_smb_sync_download_infos_state_pending">Pending</string>
+    <string name="fragment_smb_sync_download_infos_state_in_progress">In Progress</string>
+    <string name="fragment_smb_sync_download_infos_state_completed">Completed</string>
+    <string name="fragment_smb_sync_download_infos_state_failed">Failed</string>
+    <string name="fragment_smb_sync_download_infos_state_unknown">Unknown</string>
+    <string name="fragment_smb_sync_download_no_task">No Task</string>
+
+    <string name="setting_category_others">其他</string>
+    <string name="setting_clear_file_sync_infos_title">Clear File Sync Infos</string>
+    <string name="setting_clear_file_sync_infos_summary">All sync records will be removed, and file might be download again</string>
+
+    <string name="fragment_settings_dialog_clear_file_sync_infos_title">Clear File Sync Infos</string>
+    <string name="fragment_settings_dialog_clear_file_sync_infos_message">Are you sure to clear all file sync infos?</string>
+    <string name="fragment_settings_dialog_clear_file_sync_infos_positive_button">Clear</string>
+    <string name="fragment_settings_dialog_clear_file_sync_infos_negative_button">Cancel</string>
+    <string name="fragment_settings_dialog_clear_file_sync_infos_completed">All file sync infos has be removed</string>
+
+</resources>
