@@ -32,8 +32,8 @@
     <string name="activity_smb_sync_task_add_toast_check_failed">Connect to smb server failed, please check you address, username, password and path</string>
     <string name="activity_smb_sync_task_add_dialog_checking">Check connection, Please wait…</string>
 
-    <string name="fragment_smb_sync_tasks_start_success">Start sync task success, %d task has be added</string>
-    <string name="fragment_smb_sync_tasks_start_no_new_task">Start sync task success, but no task has be added</string>
+    <string name="fragment_smb_sync_tasks_start_success">Start sync task success, %d download task has be added</string>
+    <string name="fragment_smb_sync_tasks_start_no_new_task">Start sync task success, but no download task has be added</string>
     <string name="fragment_smb_sync_tasks_task_info_total">Total: %s</string>
     <string name="fragment_smb_sync_tasks_task_info_synced">Synced: %s</string>
 
@@ -44,7 +44,7 @@
     <string name="fragment_smb_sync_download_infos_state_unknown">Unknown</string>
     <string name="fragment_smb_sync_download_no_task">No Task</string>
 
-    <string name="setting_category_others">其他</string>
+    <string name="setting_category_others">others</string>
     <string name="setting_clear_file_sync_infos_title">Clear File Sync Infos</string>
     <string name="setting_clear_file_sync_infos_summary">All sync records will be removed, and file might be download again</string>
 

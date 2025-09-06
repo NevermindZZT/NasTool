@@ -5,7 +5,8 @@
         <Preference
             android:key="clear_file_sync_infos"
             android:title="@string/setting_clear_file_sync_infos_title"
-            android:summary="@string/setting_clear_file_sync_infos_summary" />
+            android:summary="@string/setting_clear_file_sync_infos_summary"
+            android:icon="@drawable/ic_setting_logo_clear" />
     </PreferenceCategory>
 
 </androidx.preference.PreferenceScreen>
