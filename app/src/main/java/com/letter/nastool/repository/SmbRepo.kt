@@ -75,7 +75,7 @@ class SmbRepo(val serverIp: String, val username: String, val password: String) 
                     parentFile.mkdirs()
                 }
                 FileOutputStream(dest).use { output ->
-                    input.copyTo(output)
+                    input.copyTo(output, bufferSize = 64 * 1024)
                 }
                 return dest
             }
