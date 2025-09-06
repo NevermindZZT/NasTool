@@ -14,5 +14,6 @@ data class SmbSyncTaskEntity(
     @ColumnInfo(name = "remote_path") var remotePath: String = "",
     @ColumnInfo(name = "local_path") var localPath: String = "",
     @ColumnInfo(name = "file_type") var fileType: String = "*",
+    @ColumnInfo(name = "include_subdirs") var includeSubDirs: Boolean = true,
     @ColumnInfo(name = "last_sync") var lastSync: Long = 0L
 )

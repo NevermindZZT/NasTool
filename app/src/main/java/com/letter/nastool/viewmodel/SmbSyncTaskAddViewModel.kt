@@ -24,6 +24,7 @@ class SmbSyncTaskAddViewModel(application: Application): AndroidViewModel(applic
     val remotePath = MutableLiveData("")
     val localPath = MutableLiveData("")
     val fileType = MutableLiveData("*")
+    val includeSubDirs = MutableLiveData(true)
 
     var task: SmbSyncTaskEntity? = null
 
@@ -44,6 +45,7 @@ class SmbSyncTaskAddViewModel(application: Application): AndroidViewModel(applic
                 password.postValue(it.password)
                 remotePath.postValue(it.remotePath)
                 localPath.postValue(it.localPath)
+                includeSubDirs.postValue(it.includeSubDirs)
             }
         }
     }
@@ -61,6 +63,7 @@ class SmbSyncTaskAddViewModel(application: Application): AndroidViewModel(applic
                     it.remotePath = remotePath.value ?: ""
                     it.localPath = localPath.value ?: ""
                     it.fileType = fileType.value ?: ""
+                    it.includeSubDirs = includeSubDirs.value == true
                     if (smbSyncManager.check(it)) {
                         smbSyncManager.updateTask(it)
                         result = true
@@ -73,7 +76,10 @@ class SmbSyncTaskAddViewModel(application: Application): AndroidViewModel(applic
                     username = username.value ?: "",
                     password = password.value ?: "",
                     remotePath = remotePath.value ?: "",
-                    localPath = localPath.value ?: ""
+                    localPath = localPath.value ?: "",
+                    fileType = fileType.value ?: "",
+                    includeSubDirs = includeSubDirs.value == true
+
                 )
                 if (smbSyncManager.check(task)) {
                     smbSyncManager.addTask(task)

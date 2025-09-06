@@ -13,6 +13,7 @@
     <string name="activity_smb_sync_task_remote_path_hint">Remote Path</string>
     <string name="activity_smb_sync_task_local_path_hint">Local Path</string>
     <string name="activity_smb_sync_task_file_type_hint">File Type</string>
+    <string name="activity_smb_sync_task_include_subdirs">Include Subdirs</string>
     <string name="activity_smb_sync_task_save_button">Save</string>
     <string name="activity_smb_sync_task_add_toolbar_menu_delete">Delete</string>
     <string name="activity_smb_sync_task_add_dialog_delete_title">Delete</string>

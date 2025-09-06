@@ -95,7 +95,11 @@ class SmbSyncManager private constructor(context: Context) {
         val smbFiles = smbRepo.listFiles(srcPath)
         smbFiles.forEach {
             count += if (it.isDirectory) {
-                getSmbFilesCount(task, smbRepo, it.path)
+                if (task.includeSubDirs) {
+                    getSmbFilesCount(task, smbRepo, it.path)
+                } else {
+                    0
+                }
             } else {
                 if (isFileFiltered(task, it.name)) 1 else 0
             }
@@ -118,7 +122,9 @@ class SmbSyncManager private constructor(context: Context) {
         val smbFiles = smbRepo.listFiles(srcPath)
         smbFiles.forEach {
             if (it.isDirectory) {
-                added += addDownloadInfo(task, smbRepo, it.path, "$destPath${File.separator}${it.name}")
+                if (task.includeSubDirs) {
+                    added += addDownloadInfo(task, smbRepo, it.path, "$destPath${File.separator}${it.name}")
+                }
             } else {
                 val syncFileInfo = getSyncFileInfo(task.id, it.path)
                 if (syncFileInfo?.fileSize == it.length() && syncFileInfo.timestamp == it.date) {
