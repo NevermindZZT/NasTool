@@ -35,6 +35,8 @@
     <string name="fragment_smb_sync_tasks_start_no_new_task">启动同步任务成功，但是没有需要添加的下载任务</string>
     <string name="fragment_smb_sync_tasks_task_info_total">总共: %s</string>
     <string name="fragment_smb_sync_tasks_task_info_synced">已同步: %s</string>
+    <string name="fragment_smb_sync_tasks_task_info_updates">需要更新: %s</string>
+    <string name="fragment_smb_sync_tasks_task_info_syncing">同步中</string>
     <string name="fragment_smb_sync_download_infos_state_pending">等待中</string>
     <string name="fragment_smb_sync_download_infos_state_in_progress">处理中</string>
     <string name="fragment_smb_sync_download_infos_state_completed">已完成</string>

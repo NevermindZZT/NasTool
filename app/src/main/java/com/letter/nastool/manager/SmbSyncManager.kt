@@ -40,6 +40,14 @@ class SmbSyncManager private constructor(context: Context) {
         ConditionVariable(false)
     }
 
+    private val stopCompleteCondition by lazy {
+        ConditionVariable()
+    }
+
+    private var threadPaused = true
+
+    private val taskInfos = mutableMapOf<Int, SmbSyncTaskInfo>()
+
     fun getAllTasks(): List<SmbSyncTaskEntity> {
         return database.smbSyncTaskDao().getAll()
     }
@@ -114,9 +122,33 @@ class SmbSyncManager private constructor(context: Context) {
         val smbRepo = SmbRepo(task.serverAddress, task.username, task.password)
         val totalFiles = getSmbFilesCount(task, smbRepo, task.remotePath)
         val syncFiles = database.smbSyncFileInfoDao().getAllByTaskId(task.id)
-        val result = SmbSyncTaskInfo(task.id, totalFiles, syncFiles.size)
+        val syncing = hasUnCompletedTask(task.id) && !threadPaused
+        val state = if (syncing) {
+            SmbSyncTaskInfo.STATE_SYNCING
+        } else {
+            SmbSyncTaskInfo.STATE_NONE
+        }
+        var info = taskInfos[task.id]
+        if (info == null) {
+            info = SmbSyncTaskInfo(task.id, totalFiles, syncFiles.size, state)
+        } else {
+            info.let {
+                it.total = totalFiles
+                it.synced = syncFiles.size
+                it.state = state
+            }
+        }
+        syncFiles.forEach {
+            val syncFileInfo = database.smbSyncFileInfoDao().get(task.id, it.path)
+            if (syncFileInfo != null) {
+                if (syncFileInfo.fileSize != it.fileSize || syncFileInfo.timestamp != it.timestamp) {
+                    info.updates++
+                }
+            }
+        }
+        taskInfos.put(task.id, info)
         smbRepo.close()
-        return result
+        return info
     }
 
     private fun addDownloadInfo(task: SmbSyncTaskEntity, smbRepo:  SmbRepo, srcPath: String,  destPath: String): Int {
@@ -146,21 +178,45 @@ class SmbSyncManager private constructor(context: Context) {
                 }
 
                 val dest = destPath.joinPath(it.name)
-                downloadInfos.value!!.add(
-                    SmbSyncDownloadInfo(task, smbRepo, it, dest)
-                )
-                Log.i(TAG, "addDownloadInfo: add download info: ${it.path} to $dest")
-                added += 1
+                if (downloadInfos.value!!.firstOrNull { item -> item.task.id == task.id && item.srcFile.path == it.path } == null) {
+                    downloadInfos.value!!.add(
+                        SmbSyncDownloadInfo(task, smbRepo, it, dest)
+                    )
+                    Log.i(TAG, "addDownloadInfo: add download info: ${it.path} to $dest")
+                    added += 1
+                } else {
+                    Log.i(TAG, "addDownloadInfo: download info already exists, skip: ${it.path} to $dest")
+                }
             }
         }
         return added
     }
 
+    private fun hasUnCompletedTask(taskId: Int): Boolean {
+        return downloadInfos.value!!.firstOrNull {
+            it.task.id == taskId && (it.state == SmbSyncDownloadInfo.STATE_PENDING || it.state == SmbSyncDownloadInfo.STATE_IN_PROGRESS)
+        } != null
+    }
+
     fun runTask(task: SmbSyncTaskEntity): Int {
         val smbRepo = SmbRepo(task.serverAddress, task.username, task.password)
         val added = addDownloadInfo(task, smbRepo, task.remotePath, task.localPath)
+        if (hasUnCompletedTask(task.id)) {
+            taskInfos[task.id]?.let {
+                it.state = SmbSyncTaskInfo.STATE_SYNCING
+                it.onChanged()
+            }
+        }
         startSync()
         return added
+    }
+
+    fun stopTask(task: SmbSyncTaskEntity) {
+        stopSync()
+    }
+
+    fun isRunning(task: SmbSyncTaskEntity): Boolean {
+        return taskInfos[task.id]?.state == SmbSyncTaskInfo.STATE_SYNCING
     }
 
     private fun startSync() {
@@ -175,13 +231,18 @@ class SmbSyncManager private constructor(context: Context) {
     }
 
     private fun stopSync() {
-        threadCondition.close()
+        stopCompleteCondition.close()
+        if (threadCondition.block(1)) {
+            threadCondition.close()
+            stopCompleteCondition.block()
+        }
     }
 
     private fun syncProcess() {
         while (!Thread.interrupted()) {
             threadCondition.block()
             SmbSyncService.start(contextWeakReference.get()!!, SmbSyncService.START_TYPE_START_SYNC)
+            threadPaused = false
             for (it in downloadInfos.value!!.iterator()) {
                 if (it.isDownloaded) {
                     continue
@@ -211,6 +272,12 @@ class SmbSyncManager private constructor(context: Context) {
                             syncFileInfo.fileSize = it.srcFile.length()
                             database.smbSyncFileInfoDao().update(syncFileInfo)
                             Log.i(TAG, "syncProcess: update sync file info: $syncFileInfo")
+                            taskInfos[it.task.id]?.let {
+                                if (it.updates > 0) {
+                                    it.updates--
+                                }
+                                it.onChanged()
+                            }
                         } else {
                             database.smbSyncFileInfoDao().insert(
                                 SmbSyncFileInfoEntity(
@@ -220,6 +287,10 @@ class SmbSyncManager private constructor(context: Context) {
                                     timestamp = it.srcFile.date
                                 )
                             )
+                            taskInfos[it.task.id]?.let {
+                                it.synced++
+                                it.onChanged()
+                            }
                             Log.i(TAG, "syncProcess: insert sync file info: ${it.srcFile.path}")
                         }
                         MediaScannerConnection.scanFile(
@@ -238,13 +309,26 @@ class SmbSyncManager private constructor(context: Context) {
                 } catch (e: Exception) {
                     Log.e(TAG, "syncProcess: download exception: ${it.srcFile.path} to ${it.destPath}", e)
                 }
-                if (!threadCondition.block(0)) {
+                taskInfos[it.task.id]?.let { taskInfo ->
+                    val syncing = hasUnCompletedTask(it.task.id)
+                    if (!syncing) {
+                        taskInfo.state = SmbSyncTaskInfo.STATE_NONE
+                        taskInfo.onChanged()
+                    }
+                }
+                if (!threadCondition.block(1)) {
                     Log.i(TAG, "syncProcess: thread paused")
                     break
                 }
             }
             SmbSyncService.start(contextWeakReference.get()!!, SmbSyncService.START_TYPE_STOP_SYNC)
+            threadPaused = true
+            stopCompleteCondition.open()
             threadCondition.close()
+            taskInfos.forEach {
+                it.value.state = SmbSyncTaskInfo.STATE_NONE
+                it.value.onChanged()
+            }
         }
         Log.e(TAG, "syncProcess: thread interrupted")
         syncThread = null

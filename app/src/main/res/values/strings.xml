@@ -39,6 +39,8 @@
     <string name="fragment_smb_sync_tasks_start_no_new_task">Start sync task success, but no download task has be added</string>
     <string name="fragment_smb_sync_tasks_task_info_total">Total: %s</string>
     <string name="fragment_smb_sync_tasks_task_info_synced">Synced: %s</string>
+    <string name="fragment_smb_sync_tasks_task_info_updates">Updates: %s</string>
+    <string name="fragment_smb_sync_tasks_task_info_syncing">Syncing</string>
 
     <string name="fragment_smb_sync_download_infos_state_pending">Pending</string>
     <string name="fragment_smb_sync_download_infos_state_in_progress">In Progress</string>

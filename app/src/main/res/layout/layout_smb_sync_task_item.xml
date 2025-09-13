@@ -18,6 +18,9 @@
             name="position"
             type="int" />
         <variable
+            name="syncing"
+            type="boolean" />
+        <variable
             name="onItemViewClick"
             type="OnItemViewClick" />
     </data>
@@ -102,10 +105,11 @@
                     android:layout_marginBottom="24dp"
                     android:clickable="true"
                     android:onClick="@{view -> onItemViewClick.onClick(position, view)}"
-                    app:srcCompat="@drawable/ic_smb_sync_task_run"
+                    android:src="@{syncing ? @drawable/ic_smb_sync_task_stop : @drawable/ic_smb_sync_task_run}"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/textView4"
+                    tools:srcCompat="@drawable/ic_smb_sync_task_run"
                     tools:ignore="ContentDescription" />
 
                 <TextView

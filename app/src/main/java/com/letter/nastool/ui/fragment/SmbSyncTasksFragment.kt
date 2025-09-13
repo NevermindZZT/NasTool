@@ -1,7 +1,9 @@
 package com.letter.nastool.ui.fragment
 
+import android.app.Application
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.letter.nastool.R
 import com.letter.nastool.adapter.BindingViewAdapter
 import com.letter.nastool.adapter.OnItemViewClick
+import com.letter.nastool.data.local.SmbSyncTaskInfo
 import com.letter.nastool.databinding.FragmentSmbSyncTasksBinding
 import com.letter.nastool.databinding.LayoutSmbSyncTaskItemBinding
 import com.letter.nastool.ui.activity.SmbSyncTaskAddActivity
@@ -61,9 +64,34 @@ class SmbSyncTasksFragment: Fragment(), View.OnClickListener, OnItemViewClick {
                     binding.model = model
                     binding.item = item
                     binding.position = position
+                    binding.syncing = false
                     binding.onItemViewClick = this@SmbSyncTasksFragment
                     model.getTaskInfo(position) { info ->
-                        binding.infoText.text = info
+                        Log.i(TAG, "initModel: info=$info")
+                        val stringBuilder = StringBuilder()
+                        stringBuilder.append(
+                            getString(R.string.fragment_smb_sync_tasks_task_info_total).format(info.total)
+                        )
+                        stringBuilder.append("\n")
+                        stringBuilder.append(
+                            getString(R.string.fragment_smb_sync_tasks_task_info_synced).format(info.synced)
+                        )
+                        if (info.updates != 0) {
+                            stringBuilder.append("\n")
+                            stringBuilder.append(
+                                getString(R.string.fragment_smb_sync_tasks_task_info_updates).format(info.updates)
+                            )
+                        }
+                        if (info.state == SmbSyncTaskInfo.STATE_SYNCING) {
+                            stringBuilder.append("\n")
+                            stringBuilder.append(
+                                getString(R.string.fragment_smb_sync_tasks_task_info_syncing)
+                            )
+                        }
+                        binding.root.post {
+                            binding.syncing = info.state == SmbSyncTaskInfo.STATE_SYNCING
+                            binding.infoText.text = stringBuilder.toString()
+                        }
                     }
                 }
                 binding.recyclerView.apply {
@@ -85,7 +113,11 @@ class SmbSyncTasksFragment: Fragment(), View.OnClickListener, OnItemViewClick {
     override fun onClick(position: Int, view: View?) {
         when (view?.id) {
             R.id.runButton -> {
-                model.run(position)
+                if (model.isSyncing(position)) {
+                    model.stop(position)
+                } else {
+                    model.run(position)
+                }
             }
             R.id.itemView -> {
                 startActivity(

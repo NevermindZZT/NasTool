@@ -3,6 +3,7 @@ package com.letter.nastool.ui.dialog
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -16,6 +17,7 @@ import com.letter.nastool.data.local.FileChooseInfo
 import com.letter.nastool.databinding.LayoutDialogFiileChooseBinding
 import com.letter.nastool.databinding.LayoutDialogFileChooseItemBinding
 import com.letter.nastool.utils.ext.joinPath
+import java.io.File
 
 class FileChooseDialogBuilder(context: Context): MaterialAlertDialogBuilder(context), View.OnClickListener, OnItemViewClick {
 
@@ -25,7 +27,9 @@ class FileChooseDialogBuilder(context: Context): MaterialAlertDialogBuilder(cont
 
     private var onFileList: ((path: String) -> List<FileChooseInfo>)? = null
 
-    private var currentDir = "/"
+    private var currentDir = File.separator
+
+    private var rootDir = File.separator
 
     private val files = ObservableArrayList<FileChooseInfo>()
 
@@ -74,6 +78,11 @@ class FileChooseDialogBuilder(context: Context): MaterialAlertDialogBuilder(cont
                     this.adapter = adapter
                     layoutManager = LinearLayoutManager(context)
                 }
+                binding.backToParentDir.visibility = if (isRootDir()) {
+                    View.GONE
+                } else {
+                    View.VISIBLE
+                }
                 if (showProgressWhenFresh) {
                     binding.progressBar.visibility = View.GONE
                     progressing = false
@@ -84,6 +93,7 @@ class FileChooseDialogBuilder(context: Context): MaterialAlertDialogBuilder(cont
 
     fun setRootDir(path: String): FileChooseDialogBuilder {
         currentDir = path
+        rootDir = currentDir
         return this
     }
 
@@ -102,11 +112,48 @@ class FileChooseDialogBuilder(context: Context): MaterialAlertDialogBuilder(cont
         return this
     }
 
+    fun backToParentDir(): Boolean {
+        if (!isRootDir()) {
+            if (currentDir.endsWith(File.separator)) {
+                currentDir = currentDir.dropLast(1)
+            }
+            currentDir = currentDir.substringBeforeLast(File.separator, File.separator)
+            freshFileList()
+            return true
+        }
+        return false
+    }
+
+    private fun isRootDir(): Boolean {
+        val current = if (currentDir.endsWith(File.separator)) {
+            currentDir.dropLast(1)
+        } else {
+            currentDir
+        }
+        val root = if (rootDir.endsWith(File.separator)) {
+            rootDir.dropLast(1)
+        } else {
+            rootDir
+        }
+        return current == root
+    }
+
     override fun create(): AlertDialog {
         binding.root.post {
             freshFileList()
         }
         dialog = super.create()
+        dialog!!.setOnKeyListener { _, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_BACK && event.action == KeyEvent.ACTION_UP) {
+                if (progressing) {
+                    return@setOnKeyListener false
+                }
+                if (backToParentDir()) {
+                    return@setOnKeyListener true
+                }
+            }
+            return@setOnKeyListener false
+        }
         return dialog!!
     }
 
@@ -119,13 +166,7 @@ class FileChooseDialogBuilder(context: Context): MaterialAlertDialogBuilder(cont
                 onFileChosen?.invoke(dialog!!, currentDir)
             }
             R.id.backToParentDir -> {
-                if (currentDir != "/") {
-                    if (currentDir.endsWith("/")) {
-                        currentDir = currentDir.dropLast(1)
-                    }
-                    currentDir = currentDir.substringBeforeLast('/', "/")
-                    freshFileList()
-                }
+                backToParentDir()
             }
         }
     }

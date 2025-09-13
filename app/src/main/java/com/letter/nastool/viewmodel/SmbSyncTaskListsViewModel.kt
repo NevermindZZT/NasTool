@@ -8,6 +8,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.letter.nastool.R
+import com.letter.nastool.data.local.SmbSyncTaskInfo
 import com.letter.nastool.database.entity.SmbSyncTaskEntity
 import com.letter.nastool.manager.SmbSyncManager
 import kotlinx.coroutines.Dispatchers
@@ -35,6 +36,11 @@ class SmbSyncTaskListsViewModel(application: Application): AndroidViewModel(appl
         }
     }
 
+    fun isSyncing(position: Int): Boolean {
+        val task = tasks.value!![position]
+        return smbSyncManager.isRunning(task)
+    }
+
     fun run(position: Int) {
         viewModelScope.launch(Dispatchers.IO) {
             val added = smbSyncManager.runTask(tasks.value!![position])
@@ -54,22 +60,18 @@ class SmbSyncTaskListsViewModel(application: Application): AndroidViewModel(appl
         }
     }
 
-    fun getTaskInfo(position: Int, onCompleted: (String) -> Unit) {
+    fun stop(position: Int) {
         viewModelScope.launch(Dispatchers.IO) {
-            val stringBuilder = StringBuilder()
+            smbSyncManager.stopTask(tasks.value!![position])
+        }
+    }
+
+    fun getTaskInfo(position: Int, onInfoChange: ((SmbSyncTaskInfo) -> Unit)) {
+        viewModelScope.launch(Dispatchers.IO) {
             val task = tasks.value!![position]
             val info = smbSyncManager.getSyncTaskInfo(task)
-            val context = getApplication<Application>()
-            stringBuilder.append(
-                context.getString(R.string.fragment_smb_sync_tasks_task_info_total).format(info.total)
-            )
-            stringBuilder.append("\n")
-            stringBuilder.append(
-                context.getString(R.string.fragment_smb_sync_tasks_task_info_synced).format(info.synced)
-            )
-            withContext(Dispatchers.Main) {
-                onCompleted.invoke(stringBuilder.toString())
-            }
+            info.onInfoChanged = onInfoChange
+            onInfoChange.invoke(info)
         }
     }
 }
